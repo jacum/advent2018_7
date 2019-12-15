@@ -120,7 +120,7 @@ object Solution {
               .take(freeSlots)
               .map(t => WorkerState(t, duration(t)))
         }) map {
-          case t@WorkerState(_, lastRemaining) => t.copy(remaining = lastRemaining - 1)
+          case ws@WorkerState(_, lastRemaining) => ws.copy(remaining = lastRemaining - 1)
         }
 
       val remainingAfterAssigned = remainingTasks.filterNot(t =>
