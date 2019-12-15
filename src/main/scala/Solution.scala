@@ -64,14 +64,15 @@ object Solution {
       stepsRemain match {
         case Nil   => stepsDone
         case steps =>
-          val nextStep = steps.filter(possibleStep => {
+          steps.find(possibleStep => {
             dependencyMap(possibleStep).forall(stepsDone.contains)
-          }).head
-          walkMap(stepsDone ++ List(nextStep), stepsRemain.filterNot(_ == nextStep))
+          }).map { nextStep =>
+            walkMap(nextStep :: stepsDone, stepsRemain.filterNot(_ == nextStep))
+          } getOrElse stepsDone
       }
     }
 
-    walkMap(List.empty, dependencyMap.keySet.toList.sorted)
+    walkMap(List.empty, dependencyMap.keySet.toList.sorted).reverse
   }
 
   def validateSequence(rules: List[Rule], steps: List[StepId]): Unit = {
